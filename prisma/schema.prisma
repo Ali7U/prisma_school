@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Profile {
+  id     String  @id @default(uuid())
+  nameProfile String 
+  dateOfBirth String 
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String  @unique  
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @unique  
+}
+
+
+
+model Teacher {
+  id String @id @default(uuid()) 
+  name String 
+  profile Profile?
+  classrooms Classroom[]
+}
+
+model Student {
+  id String @id @default(uuid()) 
+  name String 
+  age Int
+  major String 
+  profile Profile?
+  classrooms Classroom[]
+}
+
+model Classroom {
+  id String @id @default(uuid()) 
+  name String 
+  students Student[]
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String   
+}
